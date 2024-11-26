@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Pisos e Azulejos</title>
+    <script>
+        async function calcularMaterial() {
+            const larguraComodo = parseFloat(document.getElementById("larguraComodo").value);
+            const comprimentoComodo = parseFloat(document.getElementById("comprimentoComodo").value);
+            const larguraPiso = parseFloat(document.getElementById("larguraPiso").value);
+            const comprimentoPiso = parseFloat(document.getElementById("comprimentoPiso").value);
+            const margemExtra = parseFloat(document.getElementById("margemExtra").value) || 0;
+
+            const response = await fetch('calcular.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ larguraComodo, comprimentoComodo, larguraPiso, comprimentoPiso, margemExtra })
+            });
+
+            const data = await response.json();
+            document.getElementById("resultado").textContent = `Quantidade necessária: ${data.quantidadeTotal} unidades.`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Calculadora de Pisos e Azulejos</h1>
+    <form onsubmit="event.preventDefault(); calcularMaterial();">
+        <label for="larguraComodo">Largura do cômodo (m):</label>
+        <input type="number" id="larguraComodo" step="0.01" required><br><br>
+
+        <label for="comprimentoComodo">Comprimento do cômodo (m):</label>
+        <input type="number" id="comprimentoComodo" step="0.01" required><br><br>
+
+        <label for="larguraPiso">Largura do piso/azulejo (m):</label>
+        <input type="number" id="larguraPiso" step="0.01" required><br><br>
+
+        <label for="comprimentoPiso">Comprimento do piso/azulejo (m):</label>
+        <input type="number" id="comprimentoPiso" step="0.01" required><br><br>
+
+        <label for="margemExtra">Margem extra (%):</label>
+        <input type="number" id="margemExtra" step="0.01" placeholder="Opcional"><br><br>
+
+        <button type="submit">Calcular</button>
+    </form>
+    <p id="resultado"></p>
+</body>
+</html>
